@@ -1,8 +1,6 @@
 <template>
   <main>
-    <section>
-      <router-view />
-    </section>
+    <router-view />
   </main>
 </template>
 <script setup>

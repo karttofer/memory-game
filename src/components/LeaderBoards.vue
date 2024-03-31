@@ -2,7 +2,7 @@
   <div v-if="openLeaderBoardModal" class="leaderboard">
     <div>
       <h2>Leaderboard</h2>
-      <table>
+      <table v-if="leaderboardData.length">
         <thead>
           <tr>
             <th>Rank</th>
@@ -11,8 +11,8 @@
             <th>Movements</th>
           </tr>
         </thead>
-        <tbody v-if="leaderboardData.length">
-          <tr v-for="(player, index) in leaderboardData" :key="player.id">
+        <tbody>
+          <tr v-for="(player, index) in sortedLeaderboard" :key="player.id">
             <td>{{ index + 1 }}</td>
             <td>{{ player.name }}</td>
             <td>{{ player.time }}</td>
@@ -20,12 +20,13 @@
           </tr>
         </tbody>
       </table>
+      <p v-else>There aren't any winners today</p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, ref, computed } from "vue";
 import { useCounterStore } from "@/store/store";
 
 defineProps({
@@ -34,18 +35,30 @@ defineProps({
 
 const store = useCounterStore();
 
-const leaderboardData = store.records;
+const leaderboardData = ref(store.records);
+
+const sortedLeaderboard = computed(() =>
+  leaderboardData.value.slice().sort((a, b) => {
+    if (a.movements !== b.movements) {
+      return a.movements - b.movements;
+    } else {
+      return a.time - b.time;
+    }
+  })
+);
 </script>
 
 <style scoped lang="scss">
 @import "../assets/styles/colors.scss";
 
-.leaderboard {
-  padding: 10px 0px 10px 0px;
+p {
+  color: $black;
+  margin: 0px 0px 70px 0px;
+  text-align: center;
 }
 
 h2 {
-  color: $black;
+  text-align: center;
 }
 
 table {

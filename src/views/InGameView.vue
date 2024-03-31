@@ -1,16 +1,17 @@
 <template>
-  <div class="home">
-    <BoardComponent />
-  </div>
+  <BoardComponent />
+  <Leaderboard :open-leader-board-modal="true" />
 </template>
 
-<script>
+<script setup>
 import BoardComponent from "@/components/BoardComponent.vue";
-
-export default {
-  name: "HomeView",
-  components: {
-    BoardComponent,
-  },
-};
+import Leaderboard from "@/components/LeaderBoards.vue";
 </script>
+<style lang="scss">
+.in {
+  &-game {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+</style>

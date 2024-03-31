@@ -46,10 +46,6 @@
         @reset-game="($event) => startGame($event, true)"
       />
     </div>
-
-    <div>
-      <Leaderboard :open-leader-board-modal="true" />
-    </div>
   </section>
 </template>
 
@@ -66,7 +62,6 @@ import CardComponent from "@/components/CardComponent.vue";
 import TimerComponent from "@/components/TimerComponent.vue";
 import FooterComponent from "@/components/FooterComponent.vue";
 import StartGameModal from "@/components/StartGameModal.vue";
-import Leaderboard from "@/components/LeaderBoards.vue";
 import WinnerModal from "@/components/WinnerModal.vue";
 
 const imagesList = [];

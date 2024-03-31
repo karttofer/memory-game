@@ -13,7 +13,7 @@ const props = defineProps({
 
 const timeElapsed = ref(0);
 const formattedTime = ref("00:00");
-const emit = defineEmits(["timeInPlay"]);
+const emit = defineEmits(["timeInPlay", "resetTimer"]);
 
 const formatTime = () => {
   const minutes = Math.floor(timeElapsed.value / 60);
@@ -29,6 +29,9 @@ const startTimer = () => {
       timeElapsed.value++;
       formatTime();
       emit("timeInPlay", formattedTime.value);
+    } else {
+      timeElapsed.value = 0;
+      formatTime();
     }
   }, 1000);
 };
