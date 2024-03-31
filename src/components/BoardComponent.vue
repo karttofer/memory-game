@@ -1,61 +1,63 @@
 <template>
-  <StartGameModal
-    @start-game="startGame"
-    @difficulty="($event) => (totalCards = $event)"
-    :show-modal="openMenu"
-  />
-  <WinnerModal v-if="showWinnerMessage" @play-again="playAgain" />
-  <div class="memory-board-matched-pairs-timer">
-    <div>
-      <p>Matched Pair: {{ matchedPairs }}</p>
-      <p>Movements: {{ movements }}</p>
-      <p>Remaining Cards: {{ remainingCards }}</p>
+  <section>
+    <StartGameModal
+      @start-game="startGame"
+      @difficulty="($event) => (totalCards = $event)"
+      :show-modal="openMenu"
+    />
+    <WinnerModal v-if="showWinnerMessage" @play-again="playAgain" />
+    <div class="memory-board-matched-pairs-timer">
+      <div>
+        <p>Matched Pair: {{ matchedPairs }}</p>
+        <p>Movements: {{ movements }}</p>
+        <p>Remaining Cards: {{ remainingCards }}</p>
+      </div>
+
+      <div>
+        <TimerComponent
+          @time-in-play="($event) => (timeInPlay = $event)"
+          :stopTimer="stopTimer"
+        />
+      </div>
     </div>
 
-    <div>
-      <TimerComponent
-        @time-in-play="($event) => (timeInPlay = $event)"
-        :stopTimer="stopTimer"
+    <div
+      :class="`memory-board-container ${
+        totalCards === 16
+          ? 'memory-board-container-easy'
+          : totalCards === 36
+          ? 'memory-board-container-medium'
+          : 'memory-board-container-heavy'
+      }`"
+    >
+      <CardComponent
+        v-for="(card, index) in shuffledEmojiList"
+        :position="index"
+        :key="index"
+        :value="card.emoji"
+        :visible="card.visible"
+        @select-card="selectCard"
       />
     </div>
-  </div>
 
-  <div
-    :class="`memory-board-container ${
-      totalCards === 16
-        ? 'memory-board-container-easy'
-        : totalCards === 36
-        ? 'memory-board-container-medium'
-        : 'memory-board-container-heavy'
-    }`"
-  >
-    <CardComponent
-      v-for="(card, index) in shuffledEmojiList"
-      :position="index"
-      :key="index"
-      :value="card.emoji"
-      :visible="card.visible"
-      @select-card="selectCard"
-    />
-  </div>
+    <div>
+      <FooterComponent
+        @open-menu="handlerOpenMenu"
+        @reset-game="($event) => startGame($event, true)"
+      />
+    </div>
 
-  <div>
-    <FooterComponent
-      @open-menu="handlerOpenMenu"
-      @reset-game="($event) => startGame($event, true)"
-    />
-  </div>
-
-  <div>
-    <Leaderboard :open-leader-board-modal="true" />
-  </div>
+    <div>
+      <Leaderboard :open-leader-board-modal="true" />
+    </div>
+  </section>
 </template>
 
 <script setup>
 import { ref, watch } from "vue";
 import anime from "animejs/lib/anime.es.js";
 import JSConfetti from "js-confetti";
-// store
+// Store
 import { useCounterStore } from "@/store/store";
 // Assets
 import celebrationSound from "@/assets/sounds/party-horn.mp3";
@@ -83,6 +85,10 @@ const stopTimer = ref(false);
 const openMenu = ref(true);
 const showWinnerMessage = ref(false);
 
+/**
+ * @description Before everything we need to generate the links for the images,
+ * there is a lot of image to have a better game experience
+ */
 for (let i = 1; i <= 120; i++) {
   const imageUrl = `abstract-${i.toString().padStart(3, "0")}.svg`;
   imagesList.push(imageUrl);
@@ -109,6 +115,10 @@ const handlerOpenMenu = () => {
   openMenu.value = true;
 };
 
+/**
+ * @description Method to suffle arrays
+ * @return suffled array
+ */
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -117,6 +127,11 @@ const shuffleArray = (array) => {
   return array;
 };
 
+/**
+ * @description This method will use shuffleArray to create "random"
+ * positions for cards, then activate the animation
+ * @return suffled array
+ */
 const shuffleAndPairCards = () => {
   stopTimer.value = false;
   const suffleList = shuffleArray([...imagesList]);
@@ -130,9 +145,13 @@ const shuffleAndPairCards = () => {
   shuffledEmojiList.value = shuffleArray(pairedEmojiList);
   cardsGridAnimation();
   remainingCards.value = totalCards.value;
-  return true;
+  return remainingCards.value;
 };
 
+/**
+ * @description This function will control the click over cards
+ * @param { Object } payload - position and value
+ */
 const selectCard = (payload) => {
   const cardIndex = payload.position;
   const cardSelected = shuffledEmojiList.value[cardIndex];

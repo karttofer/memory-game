@@ -9,6 +9,7 @@
 
 <script setup>
 import { defineEmits } from "vue";
+
 const emit = defineEmits(["resetGame", "openMenu"]);
 
 const resetGame = () => {

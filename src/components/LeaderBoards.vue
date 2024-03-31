@@ -27,6 +27,7 @@
 <script setup>
 import { defineProps } from "vue";
 import { useCounterStore } from "@/store/store";
+
 defineProps({
   openLeaderBoardModal: Boolean,
 });

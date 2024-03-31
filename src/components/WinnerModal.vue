@@ -12,6 +12,7 @@
 <script setup>
 import { defineEmits, onMounted } from "vue";
 import anime from "animejs/lib/anime.es.js";
+
 const emit = defineEmits(["playAgain"]);
 
 const animateWinnerModal = () => {
@@ -43,7 +44,7 @@ onMounted(() => {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: #00000036;
+  background-color: $modal-background;
   backdrop-filter: blur(9px);
   opacity: 0;
   transform: translateY(-100px);

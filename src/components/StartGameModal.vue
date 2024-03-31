@@ -23,41 +23,54 @@
         </select>
         <button @click="startGame">Start Game</button>
       </div>
+      <p class="error-message" v-if="showErrorMessage">
+        Hey, you're missing some fields bro!
+      </p>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, defineEmits, watch, defineProps } from "vue";
+import { ref, defineEmits, watch, defineProps, onMounted } from "vue";
 import anime from "animejs/lib/anime.es.js";
 
 const emit = defineEmits(["startGame", "difficulty"]);
 const props = defineProps(["showModal"]);
 
-const modalRef = ref(null);
 const selectedOption = ref("");
 const playerName = ref("");
+const showErrorMessage = ref(false);
 
 const startGame = () => {
-  emit("startGame", playerName.value);
+  if (selectedOption.value && playerName.value) {
+    emit("startGame", playerName.value);
+    showErrorMessage.value = false;
+    return;
+  }
+  showErrorMessage.value = true;
 };
 
 const difficultyValue = () => {
   emit("difficulty", selectedOption.value);
 };
 
+onMounted(() => {
+  animateModalIn();
+});
+
 const animateModalIn = () => {
   anime({
-    targets: modalRef.value,
+    targets: ".modal-content",
+    translateY: [-100, 0],
     opacity: [0, 1],
-    duration: 2000,
-    easing: "easeInOutQuad",
+    duration: 1000,
+    easing: "easeOutExpo",
   });
 };
 
 const animateModalOut = () => {
   anime({
-    targets: modalRef.value,
+    targets: ".modal-content",
     opacity: [1, 0],
     duration: 500,
     easing: "easeInOutQuad",
@@ -81,6 +94,13 @@ watch(
 
 <style scoped lang="scss">
 @import "../assets/styles/colors.scss";
+.error {
+  &-message {
+    color: $red;
+    text-align: center;
+  }
+}
+
 .modal {
   position: fixed;
   display: flex;
@@ -91,7 +111,8 @@ watch(
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: $black;
+  background-color: $modal-background;
+  backdrop-filter: blur(16px);
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
 }

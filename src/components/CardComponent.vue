@@ -32,6 +32,7 @@
 <script setup>
 import { defineProps, defineEmits, ref } from "vue";
 import anime from "animejs/lib/anime.es.js";
+// Assets
 import soundEffectFlip from "@/assets/sounds/flip-card-sound-effect.mp3";
 const props = defineProps({
   matched: {
