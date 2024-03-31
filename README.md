@@ -1,34 +1,22 @@
-# memory-game
+# Memory - Game💥
 
-## Project setup
-```
-yarn install
-```
+A memory game consists of a grid of either 4x4, 6x6, or 8x8 (though it can be infinite) where you have cards that are hidden, and you must select them two by two to uncover the truth they hide.
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+## Run
 
-### Compiles and minifies for production
-```
-yarn build
+```node
+ yarn install
+ yarn serve
 ```
 
-### Run your unit tests
-```
-yarn test:unit
-```
+## Stack
 
-### Run your end-to-end tests
-```
-yarn test:e2e
-```
+1. Vue
+2. Pinia
+3. Anime.js
+4. Scss
+5. Vue Router
 
-### Lints and fixes files
-```
-yarn lint
-```
+## Enjoy
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Thanks for review the project, enjoy the app!

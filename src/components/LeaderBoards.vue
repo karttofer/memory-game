@@ -44,7 +44,7 @@ const leaderboardData = store.records;
 }
 
 h2 {
-  color: $white;
+  color: $black;
 }
 
 table {

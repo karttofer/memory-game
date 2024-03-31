@@ -4,6 +4,7 @@
     @difficulty="($event) => (totalCards = $event)"
     :show-modal="openMenu"
   />
+  <WinnerModal v-if="showWinnerMessage" @play-again="playAgain" />
   <div class="memory-board-matched-pairs-timer">
     <div>
       <p>Matched Pair: {{ matchedPairs }}</p>
@@ -64,6 +65,7 @@ import TimerComponent from "@/components/TimerComponent.vue";
 import FooterComponent from "@/components/FooterComponent.vue";
 import StartGameModal from "@/components/StartGameModal.vue";
 import Leaderboard from "@/components/LeaderBoards.vue";
+import WinnerModal from "@/components/WinnerModal.vue";
 
 const imagesList = [];
 const jsConfetti = new JSConfetti();
@@ -79,6 +81,7 @@ const movements = ref(0);
 const timeInPlay = ref(0);
 const stopTimer = ref(false);
 const openMenu = ref(true);
+const showWinnerMessage = ref(false);
 
 for (let i = 1; i <= 120; i++) {
   const imageUrl = `abstract-${i.toString().padStart(3, "0")}.svg`;
@@ -155,17 +158,29 @@ const selectCard = (payload) => {
   userSelection.value.push(payload);
 };
 
-const startGame = async (userName, isSuffle) => {
-  store.add_user(userName);
+const restore = async () => {
   matchedPairs.value = 0;
   movements.value = 0;
 
   await shuffleAndPairCards();
-  cardsGridAnimation();
+  return cardsGridAnimation();
+};
+
+const startGame = async (userName, isSuffle) => {
+  if (userName) {
+    store.add_user(userName);
+  }
+
+  await restore();
 
   if (!isSuffle) {
     openMenu.value = !openMenu.value;
   }
+};
+
+const playAgain = async () => {
+  restore();
+  showWinnerMessage.value = false;
 };
 
 watch(totalCards, (newValue) => {
@@ -195,11 +210,13 @@ watch(() => {
 
       if (remainingCards.value === 0) {
         stopTimer.value = true;
-        store.add_to_records_board(timeInPlay.value, movements);
+        store.add_to_records_board(timeInPlay.value, movements.value);
         jsConfetti.addConfetti();
+        showWinnerMessage.value = true;
       }
     } else {
       setTimeout(() => {
+        // When two selected cards are no visible we should hide them
         shuffledEmojiList.value[cardOne.position].visible =
           !shuffledEmojiList.value[cardOne.position].visible;
         shuffledEmojiList.value[cardTwo.position].visible =
@@ -243,7 +260,7 @@ watch(() => {
       display: flex;
       justify-content: space-between;
       align-items: end;
-      color: $white;
+      color: $black;
 
       p {
         margin: 0px;
