@@ -258,15 +258,15 @@ watch(() => {
       margin: 30px 0px 30px 0px;
 
       &-easy {
-        width: 344px;
+        width: 300px;
       }
 
       &-medium {
-        width: 516px;
+        width: 450px;
       }
 
       &-heavy {
-        width: 688px;
+        width: 600px;
       }
     }
 
@@ -275,6 +275,8 @@ watch(() => {
       justify-content: space-between;
       align-items: end;
       color: $black;
+      font-size: 0.9em;
+      padding: 0px 8px 0px 8px;
 
       p {
         margin: 0px;

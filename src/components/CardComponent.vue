@@ -89,8 +89,8 @@ const selectCard = () => {
       border-radius: 15px;
     }
 
-    width: 76px;
-    height: 76px;
+    width: 65px;
+    height: 65px;
     margin: 5px;
     perspective: 1000px;
     border-radius: 15px;
